@@ -10,7 +10,7 @@ namespace ORM.Implementation
         public CommandExecutionResult(bool success, Exception error = null)
         {
             Success = success;
-            Error = error
+            Error = error;
         }
 
         public bool Success { get; private set; }
