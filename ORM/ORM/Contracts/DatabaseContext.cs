@@ -1,4 +1,5 @@
-﻿using ORM.Implementation;
+﻿using ORM.Extensions;
+using ORM.Implementation;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -24,26 +25,23 @@ namespace ORM.Contracts
                 var result = database_.ExecuteCommand(database_.CreateCommand(b => b.WithConnectionString(options_.ConnectionString).WithCommandText($"CREATE DATABASE {options_.DatabaseName}")));
             }
 
-            var queryBuilder = new StringBuilder();
-            queryBuilder.AppendLine($"USE {options_.DatabaseName}");
-            var query =
-                this.GetType()
-                .GetProperties()
-                .Where(p => p.PropertyType.IsGenericType && p.PropertyType.GetGenericTypeDefinition() == typeof(DatabaseTable<>))
-                .Select(p => new EntityData
-                {
-                    PropertyName = p.Name,
-                    EntityType = p.PropertyType.GetGenericArguments()[0]
-                }).Aggregate(queryBuilder, (sb, next) =>
-                {
-                    sb.AppendLine(dbQueryTranslator_.Translate(next));
-                    return sb;
-                }).ToString();
-
-            var executionResult = database_.ExecuteCommand(database_.CreateCommand(b => b.WithCommandText(query).WithConnectionString(options_.ConnectionString)));
+            this.GetType()
+            .GetProperties()
+            .Where(p => p.PropertyType.IsGenericType && p.PropertyType.GetGenericTypeDefinition() == typeof(DatabaseTable<>))
+            .Select(p => new EntityData
+            {
+                PropertyName = p.Name,
+                EntityType = p.PropertyType.GetGenericArguments()[0]
+            }).Each(entity =>
+            {
+                var queryBuilder = new StringBuilder();
+                queryBuilder.AppendLine($"USE {options_.DatabaseName}");
+                queryBuilder.Append(dbQueryTranslator_.Translate(entity));
+                var executionResult = database_.ExecuteCommand(database_.CreateCommand(b => b.WithCommandText(queryBuilder.ToString()).WithConnectionString(options_.ConnectionString)));
+            });
         }
 
-        public static bool CheckDatabaseExists(string connectionString, string databaseName)
+        private bool CheckDatabaseExists(string connectionString, string databaseName)
         {
             using (var connection = new SqlConnection(connectionString))
             {

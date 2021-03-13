@@ -12,5 +12,7 @@ namespace ORMPlayground
         }
 
         public DatabaseTable<MySimpleEntity> Entities { get; private set; }
+
+        public DatabaseTable<Product> Products { get; private set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using ORM.Contracts;
+using ORM.Implementation.SqlTypes;
 using System;
 using System.Collections.Generic;
 using System.Linq;

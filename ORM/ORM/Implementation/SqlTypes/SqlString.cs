@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ORM.Implementation
+namespace ORM.Implementation.SqlTypes
 {
     public class SqlString : SqlDataType
     {

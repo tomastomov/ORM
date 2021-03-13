@@ -1,4 +1,4 @@
-﻿using ORM.Implementation;
+﻿using ORM.Implementation.SqlTypes;
 using System;
 using System.Collections.Generic;
 using System.Text;
