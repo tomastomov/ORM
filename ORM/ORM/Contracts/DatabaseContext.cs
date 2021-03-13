@@ -11,6 +11,7 @@ namespace ORM.Contracts
     {
         private DatabaseContextOptions options_;
         private readonly IQueryTranslator<EntityData, string> dbQueryTranslator_ = new DatabaseCreationQueryTranslator();
+        private readonly IDatabase database_ = new Database();
         public DatabaseContext(DatabaseContextOptions options)
         {
             options_ = options;
@@ -18,16 +19,11 @@ namespace ORM.Contracts
 
         public void CreateDatabase()
         {
-            using var connection = new SqlConnection(options_.ConnectionString);
             if (!CheckDatabaseExists(options_.ConnectionString, options_.DatabaseName))
             {
-                var dbCreationCommand = connection.CreateCommand();
-                dbCreationCommand.CommandText = $"CREATE DATABASE {options_.DatabaseName}";
-                connection.Open();
-                var result = dbCreationCommand.ExecuteNonQuery();
-                connection.Close();
-
+                var result = database_.ExecuteCommand(database_.CreateCommand(b => b.WithConnectionString(options_.ConnectionString).WithCommandText($"CREATE DATABASE {options_.DatabaseName}")));
             }
+
             var queryBuilder = new StringBuilder();
             queryBuilder.AppendLine($"USE {options_.DatabaseName}");
             var query =
@@ -44,17 +40,14 @@ namespace ORM.Contracts
                     return sb;
                 }).ToString();
 
-            connection.Open();
-            var command = new SqlCommand(query, connection);
-            var tableCreationResult = command.ExecuteNonQuery();
-            connection.Close();
+            var executionResult = database_.ExecuteCommand(database_.CreateCommand(b => b.WithCommandText(query).WithConnectionString(options_.ConnectionString)));
         }
 
         public static bool CheckDatabaseExists(string connectionString, string databaseName)
         {
             using (var connection = new SqlConnection(connectionString))
             {
-                using (var command = new SqlCommand($"SELECT db_id('{databaseName}')", connection))
+                using (var command = new System.Data.SqlClient.SqlCommand($"SELECT db_id('{databaseName}')", connection))
                 {
                     connection.Open();
                     return (command.ExecuteScalar() != DBNull.Value);
