@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30711.63
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ORM", "ORM\ORM.csproj", "{3100E968-7D9E-4271-A367-CFBF72EAA14D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ORMPlayground", "ORMPlayground\ORMPlayground.csproj", "{163850C9-31CE-4D9D-8E87-3A3A4EA7994D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3100E968-7D9E-4271-A367-CFBF72EAA14D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3100E968-7D9E-4271-A367-CFBF72EAA14D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3100E968-7D9E-4271-A367-CFBF72EAA14D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3100E968-7D9E-4271-A367-CFBF72EAA14D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{163850C9-31CE-4D9D-8E87-3A3A4EA7994D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{163850C9-31CE-4D9D-8E87-3A3A4EA7994D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{163850C9-31CE-4D9D-8E87-3A3A4EA7994D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{163850C9-31CE-4D9D-8E87-3A3A4EA7994D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1FA44874-4AF5-483D-A5C4-99B0DBFE870A}
+	EndGlobalSection
+EndGlobal
