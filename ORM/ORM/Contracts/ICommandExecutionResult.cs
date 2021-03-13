@@ -6,5 +6,8 @@ namespace ORM.Contracts
 {
     public interface ICommandExecutionResult
     {
+        bool Success { get; }
+
+        Exception Error { get; }
     }
 }

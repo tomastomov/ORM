@@ -11,7 +11,7 @@ namespace ORM.Contracts
     {
         private DatabaseContextOptions options_;
         private readonly IQueryTranslator<EntityData, string> dbQueryTranslator_ = new DatabaseCreationQueryTranslator();
-        private readonly IDatabase database_ = new Database();
+        private readonly IDatabase database_ = new SqlDatabase();
         public DatabaseContext(DatabaseContextOptions options)
         {
             options_ = options;
