@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ORM.Contracts;
+using System;
 
 namespace ORMPlayground
 {
@@ -6,7 +7,9 @@ namespace ORMPlayground
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            var context = new MyContext(new DatabaseContextOptions("Server=.;Trusted_Connection=True", "MyORMDB"));
+
+            context.CreateDatabase();
         }
     }
 }
