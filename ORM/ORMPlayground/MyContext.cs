@@ -11,6 +11,15 @@ namespace ORMPlayground
         {
         }
 
+        public override void OnModelCreating(IModelBuilder builder)
+        {
+            builder.Entity<Product>()
+                .HasKey(k => k.Id)
+                .HasOne(k => k.Entity)
+                .WithMany(p => p.Products);
+                
+        }
+
         public DatabaseTable<MySimpleEntity> Entities { get; private set; }
 
         public DatabaseTable<Product> Products { get; private set; }

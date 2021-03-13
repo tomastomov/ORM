@@ -18,6 +18,10 @@ namespace ORM.Contracts
             options_ = options;
         }
 
+        public virtual void OnModelCreating(IModelBuilder builder)
+        {
+        }
+
         public void CreateDatabase()
         {
             if (!CheckDatabaseExists(options_.ConnectionString, options_.DatabaseName))

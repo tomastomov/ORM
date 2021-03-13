@@ -11,5 +11,7 @@ namespace ORMPlayground
         public string Name { get; set; }
 
         public decimal Price { get; set; }
+
+        public MySimpleEntity Entity { get; set; }
     }
 }
