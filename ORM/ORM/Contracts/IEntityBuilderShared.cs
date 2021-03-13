@@ -7,6 +7,8 @@ namespace ORM.Contracts
 {
     public interface IEntityBuilderShared<TEntity>
     {
-        IEntityBuilder<TKey> WithMany<TKey>(Expression<Func<TEntity, ICollection<TKey>>> propertySelector);
+        IEntityBuilder<TKey> WithMany<TKey>(Expression<Func<TEntity, IEnumerable<TKey>>> propertySelector);
+
+        IEntityBuilder<TKey> WithOne<TKey>(Expression<Func<TEntity, TKey>> propertySelector);
     }
 }
