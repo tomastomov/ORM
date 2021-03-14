@@ -1,10 +1,10 @@
 ﻿using ORM.Contracts;
 using ORM.Contracts.Builders;
+using ORM.Implementation.Keys;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Reflection;
-using System.Text;
+using ORM.Extensions;
 
 namespace ORM.Implementation.Builders
 {
@@ -17,17 +17,14 @@ namespace ORM.Implementation.Builders
         }
         public IEntityBuilder<TEntity> HasKey<TKey>(Expression<Func<TEntity, TKey>> propertySelector)
         {
+            var propertyInfo = propertySelector.GetPropertyInfo();
+
             var entityType = GetEntityType();
             var modelData = storage_.Get(entityType);
 
-            var memberExpression = propertySelector.Body as MemberExpression;
+            var key = new PrimaryKey(propertyInfo.PropertyType, propertyInfo);
 
-            if (memberExpression == null)
-            {
-                throw new ArgumentException("Invalid property selector");
-            }
-
-            var propertyInfo = memberExpression.Member as PropertyInfo;
+            modelData.Keys.Add(key);
 
             return new EntityBuilder<TEntity>(storage_);
         }

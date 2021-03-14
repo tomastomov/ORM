@@ -10,8 +10,11 @@ namespace ORM.Implementation
         public ModelData()
         {
             Relationships = new List<IEntityRelationship<Type, Type>>();
+            Keys = new List<IKey>();
         }
 
         public ICollection<IEntityRelationship<Type, Type>> Relationships { get; private set; }
+
+        public ICollection<IKey> Keys { get; private set; }
     }
 }
