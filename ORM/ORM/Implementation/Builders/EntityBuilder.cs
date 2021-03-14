@@ -6,15 +6,19 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using ORM.Extensions;
 using ORM.Implementation.Enums;
+using ORM.Contracts.Factories;
+using ORM.Implementation.Factories;
 
 namespace ORM.Implementation.Builders
 {
     internal class EntityBuilder<TEntity> : IEntityBuilder<TEntity>
     {
         private readonly IModelDataStorage<Type> storage_;
+        private readonly IEntityRelationshipFactory entityRelationshipFactory_;
         public EntityBuilder(IModelDataStorage<Type> storage)
         {
             storage_ = storage;
+            entityRelationshipFactory_ = new EntityRelationshipFactory();
         }
 
         public IEntityBuilder<TEntity> HasKey<TKey>(Expression<Func<TEntity, TKey>> propertySelector)
@@ -34,29 +38,24 @@ namespace ORM.Implementation.Builders
 
         public IEntityNavigationBuilder<TRelatedEntity, TEntity> HasMany<TRelatedEntity>(Expression<Func<TEntity, IEnumerable<TRelatedEntity>>> entitySelector)
         {
-            CreateRelationship<TRelatedEntity>(RelationshipType.Many);
+            var relationship = entityRelationshipFactory_.Create<TEntity, TRelatedEntity>(RelationshipType.Many);
+
+            GetModelData<TEntity>()?.Relationships.Add(relationship);
 
             return new EntityNavigationBuilder<TRelatedEntity, TEntity>(storage_);
         }
 
         public IEntityNavigationBuilder<TRelatedEntity, TEntity> HasOne<TRelatedEntity>(Expression<Func<TEntity, TRelatedEntity>> entitySelector)
         {
-            CreateRelationship<TRelatedEntity>(RelationshipType.One);
+            var relationship = entityRelationshipFactory_.Create<TEntity, TRelatedEntity>(RelationshipType.One);
+
+            GetModelData<TEntity>()?.Relationships.Add(relationship);
 
             return new EntityNavigationBuilder<TRelatedEntity, TEntity>(storage_);
         }
 
-        private void CreateRelationship<TRelatedEntity>(RelationshipType relationshipType)
-        {
-            var relatedEntityType = GetEntityType<TRelatedEntity>();
-            var entityType = GetEntityType<TEntity>();
-            var relationship = new EntityRelationship(typeof(TEntity), typeof(TRelatedEntity), relationshipType);
-            var modelData = GetModelData(entityType);
-            modelData.Relationships.Add(relationship);
-        }
-
-        private ModelData GetModelData(Type key)
-            => storage_.Get(key);
+        private ModelData GetModelData<T>()
+            => storage_.Get(typeof(T));
 
         private Type GetEntityType<T>()
             => typeof(T);
