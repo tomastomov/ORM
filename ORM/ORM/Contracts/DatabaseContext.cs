@@ -13,13 +13,14 @@ namespace ORM.Contracts
     public abstract class DatabaseContext : IDatabaseContext
     {
         private DatabaseContextOptions options_;
-        private readonly IQueryTranslator<EntityData, string> dbQueryTranslator_ = new DatabaseCreationQueryTranslator();
+        private readonly IQueryTranslator<EntityData, string> dbQueryTranslator_;
         private readonly IDatabase database_ = new SqlDatabase();
         private readonly IModelDataStorage<Type> modelDataStorage_;
         public DatabaseContext(DatabaseContextOptions options)
         {
             options_ = options;
             modelDataStorage_ = new ModelDataStorage<Type>();
+            dbQueryTranslator_ = new DatabaseCreationQueryTranslator(modelDataStorage_);
         }
 
         public virtual void OnModelCreating(IModelBuilder builder)
