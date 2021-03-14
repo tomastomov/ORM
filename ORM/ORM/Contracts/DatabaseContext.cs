@@ -19,6 +19,7 @@ namespace ORM.Contracts
         public DatabaseContext(DatabaseContextOptions options)
         {
             options_ = options;
+            modelDataStorage_ = new ModelDataStorage<Type>();
         }
 
         public virtual void OnModelCreating(IModelBuilder builder)

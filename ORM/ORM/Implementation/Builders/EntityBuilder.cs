@@ -15,10 +15,12 @@ namespace ORM.Implementation.Builders
     {
         private readonly IModelDataStorage<Type> storage_;
         private readonly IEntityRelationshipFactory entityRelationshipFactory_;
+        private readonly IEntityPropertyBuilder<TEntity> entityPropertyBuilder_;
         public EntityBuilder(IModelDataStorage<Type> storage)
         {
             storage_ = storage;
             entityRelationshipFactory_ = new EntityRelationshipFactory();
+            entityPropertyBuilder_ = new EntityPropertyBuilder<TEntity>(storage_);
         }
 
         public IEntityBuilder<TEntity> HasKey<TKey>(Expression<Func<TEntity, TKey>> propertySelector)
@@ -59,5 +61,10 @@ namespace ORM.Implementation.Builders
 
         private Type GetEntityType<T>()
             => typeof(T);
+
+        public IEntityPropertyOptionsBuilder<TEntity> HasProperty<TProperty>(Expression<Func<TEntity, TProperty>> propertySelector)
+        {
+            return entityPropertyBuilder_.HasProperty<TProperty>(propertySelector);
+        }
     }
 }

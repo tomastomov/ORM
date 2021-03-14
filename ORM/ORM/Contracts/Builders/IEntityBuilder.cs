@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ORM.Contracts.Builders
 {
-    public interface IEntityBuilder<TEntity> : IEntityRelationshipBuilder<TEntity>
+    public interface IEntityBuilder<TEntity> : IEntityRelationshipBuilder<TEntity>, IEntityPropertyBuilder<TEntity>
     {
         IEntityBuilder<TEntity> HasKey<TKey>(Expression<Func<TEntity, TKey>> propertySelector);
     }
