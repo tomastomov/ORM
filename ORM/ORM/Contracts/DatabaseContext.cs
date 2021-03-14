@@ -1,6 +1,7 @@
 ﻿using ORM.Contracts.Builders;
 using ORM.Extensions;
 using ORM.Implementation;
+using ORM.Implementation.Builders;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -25,6 +26,7 @@ namespace ORM.Contracts
 
         public void CreateDatabase()
         {
+            OnModelCreating(new ModelBuilder());
             if (!CheckDatabaseExists(options_.ConnectionString, options_.DatabaseName))
             {
                 var result = database_.ExecuteCommand(database_.CreateCommand(b => b.WithConnectionString(options_.ConnectionString).WithCommandText($"CREATE DATABASE {options_.DatabaseName}")));
