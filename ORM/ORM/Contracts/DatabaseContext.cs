@@ -15,6 +15,7 @@ namespace ORM.Contracts
         private DatabaseContextOptions options_;
         private readonly IQueryTranslator<EntityData, string> dbQueryTranslator_ = new DatabaseCreationQueryTranslator();
         private readonly IDatabase database_ = new SqlDatabase();
+        private readonly IModelDataStorage<Type> modelDataStorage_;
         public DatabaseContext(DatabaseContextOptions options)
         {
             options_ = options;
@@ -22,11 +23,13 @@ namespace ORM.Contracts
 
         public virtual void OnModelCreating(IModelBuilder builder)
         {
+            
         }
 
         public void CreateDatabase()
         {
-            OnModelCreating(new ModelBuilder());
+            OnModelCreating(new ModelBuilder(modelDataStorage_));
+
             if (!CheckDatabaseExists(options_.ConnectionString, options_.DatabaseName))
             {
                 var result = database_.ExecuteCommand(database_.CreateCommand(b => b.WithConnectionString(options_.ConnectionString).WithCommandText($"CREATE DATABASE {options_.DatabaseName}")));

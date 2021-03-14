@@ -5,8 +5,12 @@ using System.Text;
 
 namespace ORM.Contracts
 {
-    public interface IEntityRelationship<TEntity, TRelatedEntity>
+    public interface IEntityRelationship
     {
-        RelationshipType RelationshipType { get; }  
+        RelationshipType RelationshipType { get; }
+
+        Type Entity { get; }
+
+        Type RelatedEntity { get; }
     }
 }

@@ -9,9 +9,9 @@ namespace ORM.Implementation.Builders
     internal class ModelBuilder : IModelBuilder
     {
         private readonly IModelDataStorage<Type> storage_;
-        public ModelBuilder()
+        public ModelBuilder(IModelDataStorage<Type> storage)
         {
-            storage_ = new ModelDataStorage<Type>();
+            storage_ = storage;
         }
         public IEntityBuilder<TEntity> Entity<TEntity>()
         {

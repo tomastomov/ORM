@@ -9,11 +9,11 @@ namespace ORM.Implementation
     {
         public ModelData()
         {
-            Relationships = new List<IEntityRelationship<Type, Type>>();
+            Relationships = new List<IEntityRelationship>();
             Keys = new List<IKey>();
         }
 
-        public ICollection<IEntityRelationship<Type, Type>> Relationships { get; private set; }
+        public ICollection<IEntityRelationship> Relationships { get; private set; }
 
         public ICollection<IKey> Keys { get; private set; }
     }
