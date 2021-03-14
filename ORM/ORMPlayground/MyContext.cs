@@ -1,4 +1,5 @@
 ﻿using ORM.Contracts;
+using ORM.Contracts.Builders;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,17 +14,21 @@ namespace ORMPlayground
 
         public override void OnModelCreating(IModelBuilder builder)
         {
-            //TODO fix builders
             builder.Entity<Product>()
-                .HasKey(k => k.Id)
-                .HasOne(k => k.Entity)
-                .WithMany(p => p.Products)
-                .HasForeignKey(k => k.EntityId);
+                .HasKey(k => k.Id);
 
             builder.Entity<MySimpleEntity>()
-                .HasKey(k => k.Id)
-                .HasMany(p => p.Products)
-                .WithOne(k => k.Entity);
+                .HasKey(k => k.Id);
+
+            builder.Entity<MySimpleEntity>()
+                .HasMany(k => k.Products)
+                .WithOne(c => c.Entity)
+                .HasForeignKey(c => c.EntityId);
+
+            builder.Entity<Product>()
+                .HasOne(c => c.Entity)
+                .WithMany(p => p.Products)
+                .HasForeignKey(c => c.EntityId);
         }
 
         public DatabaseTable<MySimpleEntity> Entities { get; private set; }

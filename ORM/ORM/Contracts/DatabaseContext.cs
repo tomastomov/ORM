@@ -1,4 +1,5 @@
-﻿using ORM.Extensions;
+﻿using ORM.Contracts.Builders;
+using ORM.Extensions;
 using ORM.Implementation;
 using System;
 using System.Collections.Generic;
