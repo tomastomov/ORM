@@ -64,7 +64,7 @@ namespace ORM.Implementation.Builders
 
         public IEntityPropertyOptionsBuilder<TEntity> HasProperty<TProperty>(Expression<Func<TEntity, TProperty>> propertySelector)
         {
-            return entityPropertyBuilder_.HasProperty<TProperty>(propertySelector);
+            return entityPropertyBuilder_.HasProperty(propertySelector);
         }
     }
 }

@@ -42,9 +42,22 @@ namespace ORM.Implementation.Builders
         {
             var pendingRelationship = GetPreviousRelationship();
 
-            var relationship = entityRelationshipFactory_.Create<TEntity, TRelatedEntity>(relationshipType | pendingRelationship.RelationshipType);
+            var relationship = entityRelationshipFactory_.Create<TEntity, TRelatedEntity>(BuildRelationshipType(pendingRelationship.RelationshipType, relationshipType));
 
             return new EntityDataBuilder<T>(storage_);
+        }
+
+        private RelationshipType BuildRelationshipType(RelationshipType previousRelationshipType, RelationshipType currentRelationshipType)
+        {
+            if (previousRelationshipType == RelationshipType.One && currentRelationshipType == RelationshipType.One)
+            {
+                return RelationshipType.OneToOne;
+            }
+            else if (previousRelationshipType == RelationshipType.Many && currentRelationshipType == RelationshipType.Many)
+            {
+                return RelationshipType.ManyToMany;
+            }
+            else return RelationshipType.OneToMany;
         }
     }
 }

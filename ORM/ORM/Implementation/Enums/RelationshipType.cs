@@ -4,13 +4,12 @@ using System.Text;
 
 namespace ORM.Implementation.Enums
 {
-    [Flags]
     public enum RelationshipType
     {
         One = 1,
-        OneToOne = 2,
-        Many = 4,
-        OneToMany = 5,
-        ManyToMany = 8
+        Many = 2,
+        OneToOne = 3,
+        OneToMany = 4,
+        ManyToMany = 5
     }
 }
