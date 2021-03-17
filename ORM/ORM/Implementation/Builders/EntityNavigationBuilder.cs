@@ -21,14 +21,10 @@ namespace ORM.Implementation.Builders
             entityRelationshipFactory_ = new EntityRelationshipFactory();
         }
         public IEntityDataBuilder<TRelatedEntity> WithMany(Expression<Func<TEntity, IEnumerable<TRelatedEntity>>> entitySelector)
-        {
-            return BuildRelationship<TRelatedEntity>(RelationshipType.Many);
-        }
+            => BuildRelationship<TRelatedEntity>(RelationshipType.Many);
 
         public IEntityDataBuilder<TEntity> WithOne(Expression<Func<TEntity, TRelatedEntity>> entitySelector)
-        {
-            return BuildRelationship<TEntity>(RelationshipType.One);
-        }
+            => BuildRelationship<TEntity>(RelationshipType.One);
         
         private IEntityRelationship GetPreviousRelationship()
         {
@@ -43,6 +39,8 @@ namespace ORM.Implementation.Builders
             var pendingRelationship = GetPreviousRelationship();
 
             var relationship = entityRelationshipFactory_.Create<TEntity, TRelatedEntity>(BuildRelationshipType(pendingRelationship.RelationshipType, relationshipType));
+
+            storage_.Get(typeof(T))?.Relationships.Add(relationship);
 
             return new EntityDataBuilder<T>(storage_);
         }

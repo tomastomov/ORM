@@ -12,18 +12,12 @@ namespace ORM.Implementation
     public class SqlTypeConverter : ISqlTypeConverter
     {
         private static IList<SqlDataType> types_;
-        private static long isPopulated_ = 0;
-        public SqlTypeConverter()
+        static SqlTypeConverter()
         {
-            if (Interlocked.CompareExchange(ref isPopulated_, 0, 0) == 0)
-            {
-                types_ = Assembly.GetAssembly(typeof(SqlDataType)).GetTypes()
+            types_ = Assembly.GetAssembly(typeof(SqlDataType)).GetTypes()
                     .Where(t => typeof(SqlDataType).IsAssignableFrom(t) && !t.IsAbstract)
                     .Select(t => (SqlDataType)Activator.CreateInstance(t))
                     .ToList();
-
-                Interlocked.Exchange(ref isPopulated_, 1);
-            }
         }
 
         public SQLType Convert<TType, SQLType>(TType type) where SQLType : SqlDataType
