@@ -18,7 +18,7 @@ namespace ORM.Implementation.Keys
 
         public string Translate()
         {
-            return "PRIMARY KEY";
+            return $"PK_{Property.Name} PRIMARY KEY ({Property.Name})";
         }
     }
 }

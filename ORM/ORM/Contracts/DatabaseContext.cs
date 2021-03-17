@@ -1,5 +1,6 @@
 ﻿using ORM.Contracts.Builders;
 using ORM.Extensions;
+using ORM.Helpers;
 using ORM.Implementation;
 using ORM.Implementation.Builders;
 using System;
@@ -47,7 +48,7 @@ namespace ORM.Contracts
             }).Each(entity =>
             {
                 var queryBuilder = new StringBuilder();
-                queryBuilder.AppendLine($"USE {options_.DatabaseName}");
+                queryBuilder.AppendLine($"{SQLCommandConstants.USE} {options_.DatabaseName}");
                 queryBuilder.Append(dbQueryTranslator_.Translate(entity));
                 var executionResult = database_.ExecuteCommand(database_.CreateCommand(b => b.WithCommandText(queryBuilder.ToString()).WithConnectionString(options_.ConnectionString)));
             });

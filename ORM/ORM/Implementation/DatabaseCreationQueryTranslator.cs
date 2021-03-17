@@ -1,4 +1,5 @@
 ﻿using ORM.Contracts;
+using ORM.Helpers;
 using ORM.Implementation.SqlTypes;
 using System;
 using System.Collections.Generic;
@@ -20,7 +21,7 @@ namespace ORM.Implementation
         {
             var builder = new StringBuilder();
 
-            builder.AppendLine($"CREATE TABLE {query.PropertyName} (");
+            builder.AppendLine($"{SQLCommandConstants.CREATE_TABLE} {query.PropertyName} (");
 
             var entityProperties = query.EntityType.GetProperties()
                 .Where(p => !IsPropertyIgnored(query.EntityType, p))
