@@ -27,7 +27,7 @@ namespace ORM.Implementation
             }
             catch (Exception ex)
             {
-                return new CommandExecutionResult(false, ex);
+                throw ex;
             }
            
             return new CommandExecutionResult(true);
