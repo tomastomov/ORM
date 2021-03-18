@@ -1,4 +1,5 @@
 ﻿using ORM.Contracts;
+using ORM.Helpers;
 using System;
 using System.Reflection;
 
@@ -6,19 +7,14 @@ namespace ORM.Implementation.Keys
 {
     internal class PrimaryKey : IKey
     {
-        public PrimaryKey(Type type, PropertyInfo property)
+        public PrimaryKey(Type dataType, PropertyInfo property)
         {
-            Type = type;
+            DataType = dataType;
             Property = property;
         }
 
-        public Type Type { get; private set; }
+        public Type DataType { get; private set; }
 
         public PropertyInfo Property { get; private set; }
-
-        public string Translate()
-        {
-            return $"PK_{Property.Name} PRIMARY KEY ({Property.Name})";
-        }
     }
 }

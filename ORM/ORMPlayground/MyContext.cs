@@ -18,16 +18,19 @@ namespace ORMPlayground
                 .HasKey(k => k.Id);
 
             builder.Entity<MySimpleEntity>()
+                .HasProperty(e => e.Products)
+                .Ignore();
+
+            builder.Entity<Product>()
+                .HasProperty(p => p.Entity)
+                .Ignore();
+
+            builder.Entity<MySimpleEntity>()
                 .HasKey(k => k.Id);
 
             builder.Entity<MySimpleEntity>()
                 .HasMany(k => k.Products)
                 .WithOne(c => c.Entity)
-                .HasForeignKey(c => c.EntityId);
-
-            builder.Entity<Product>()
-                .HasOne(c => c.Entity)
-                .WithMany(p => p.Products)
                 .HasForeignKey(c => c.EntityId);
         }
 

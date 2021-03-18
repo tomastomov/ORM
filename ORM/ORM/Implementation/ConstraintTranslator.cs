@@ -8,9 +8,18 @@ namespace ORM.Implementation
 {
     internal class ConstraintTranslator : IConstraintTranslator
     {
+        private readonly DatabaseContextOptions options_;
+
+        public ConstraintTranslator(DatabaseContextOptions options)
+        {
+            options_ = options;
+        }
+
         public string Translate(IConstraint constraint)
         {
             var queryBuilder = new StringBuilder();
+
+            queryBuilder.AppendLine($"{SQLCommandConstants.USE} {options_.DatabaseName}");
 
             queryBuilder.AppendLine($"{SQLCommandConstants.ALTER_TABLE} {constraint.TableName}");
 

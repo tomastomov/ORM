@@ -1,4 +1,5 @@
 ﻿using ORM.Contracts;
+using ORM.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -8,19 +9,17 @@ namespace ORM.Implementation.Keys
 {
     internal class ForeignKey : IKey
     {
-        public ForeignKey(Type type, PropertyInfo property)
+        public ForeignKey(Type dataType, PropertyInfo property, IEntityRelationship relationship)
         {
-            Type = type;
+            DataType = dataType;
             Property = property;
+            Relationship = relationship;
         }
 
-        public Type Type { get; private set; }
+        public Type DataType { get; }
 
-        public PropertyInfo Property { get; private set; }
+        public PropertyInfo Property { get; }
 
-        public string Translate()
-        {
-            return "FOREIGN KEY";
-        }
+        public IEntityRelationship Relationship { get; }
     }
 }

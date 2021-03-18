@@ -5,9 +5,9 @@ using System.Text;
 
 namespace ORM.Contracts
 {
-    public interface IKey : IQueryTranslatable
+    public interface IKey
     {
-        Type Type { get; }
+        Type DataType { get; }
 
         PropertyInfo Property { get; }
     }

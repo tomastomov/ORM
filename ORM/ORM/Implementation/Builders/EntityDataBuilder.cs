@@ -12,9 +12,11 @@ namespace ORM.Implementation.Builders
     internal class EntityDataBuilder<TEntity> : IEntityDataBuilder<TEntity>
     {
         private readonly IModelDataStorage<Type> storage_;
-        public EntityDataBuilder(IModelDataStorage<Type> storage)
+        private readonly IEntityRelationship relationship_;
+        public EntityDataBuilder(IModelDataStorage<Type> storage, IEntityRelationship relationship)
         {
             storage_ = storage;
+            relationship_ = relationship;
         }
         public IEntityDataBuilder<TEntity> HasForeignKey<TKey>(Expression<Func<TEntity, TKey>> dataSelector)
         {
@@ -22,7 +24,7 @@ namespace ORM.Implementation.Builders
 
             var entityType = typeof(TEntity);
 
-            storage_.Get(entityType)?.Keys.Add(new ForeignKey(propertyInfo.PropertyType, propertyInfo));
+            storage_.Get(entityType)?.Keys.Add(new ForeignKey(propertyInfo.PropertyType, propertyInfo, relationship_));
 
             return this;
         }

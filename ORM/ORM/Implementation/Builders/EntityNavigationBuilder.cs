@@ -31,7 +31,10 @@ namespace ORM.Implementation.Builders
             var entityType = typeof(TEntity);
             var relatedType = typeof(TRelatedEntity);
 
-            return storage_.Get(entityType)?.Relationships.FirstOrDefault(r => r.Entity == entityType && r.RelatedEntity == relatedType);
+            var entityPreviousRelationship = storage_.Get(entityType)?.Relationships.FirstOrDefault(r => r.Entity == entityType && r.RelatedEntity == relatedType);
+            var relatedEntityPreviousRelationship = storage_.Get(relatedType)?.Relationships.FirstOrDefault(r => r.Entity == relatedType && r.RelatedEntity == entityType);
+
+            return entityPreviousRelationship ?? relatedEntityPreviousRelationship;
         }
 
         private IEntityDataBuilder<T> BuildRelationship<T>(RelationshipType relationshipType)
@@ -42,7 +45,7 @@ namespace ORM.Implementation.Builders
 
             storage_.Get(typeof(T))?.Relationships.Add(relationship);
 
-            return new EntityDataBuilder<T>(storage_);
+            return new EntityDataBuilder<T>(storage_, relationship);
         }
 
         private RelationshipType BuildRelationshipType(RelationshipType previousRelationshipType, RelationshipType currentRelationshipType)

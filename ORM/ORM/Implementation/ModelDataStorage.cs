@@ -18,7 +18,7 @@ namespace ORM.Implementation
 
         public ModelData Get(TEntity key)
         {
-            if (!models_.TryGetValue(key, out var modelData))
+            if (models_.TryGetValue(key, out var modelData))
             {
                 return modelData;
             }
