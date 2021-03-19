@@ -57,33 +57,43 @@ namespace ORM.Contracts
 
             entities.Each(entity =>
             {
-                var queryBuilder = new StringBuilder();
-                queryBuilder.AppendLine($"{SQLCommandConstants.USE} {options_.DatabaseName}");
-                queryBuilder.Append(dbQueryTranslator_.Translate(entity));
-                var executionResult = database_.ExecuteCommand(database_.CreateCommand(b => b.WithCommandText(queryBuilder.ToString()).WithConnectionString(options_.ConnectionString)));
+                ProcessDatabaseTableCreation(entity);
             })
             .Each(entity =>
             {
-                this.modelDataStorage_.Get(entity.EntityType).Keys
+                modelDataStorage_.Get(entity.EntityType).Keys
                 .Each(key =>
                 {
-                    IConstraint constraint = null;
-
-                    if (key is ForeignKey foreignKey)
-                    {
-                        var referencedTableName = dbTableToPropertyName_[foreignKey.Relationship.RelatedEntity];
-                        constraint = new ForeignKeyConstraint(key, entity.PropertyName, referencedTableName);
-                    }
-                    else if (key is PrimaryKey primaryKey)
-                    {
-                        constraint = new PrimaryKeyConstraint(key, entity.PropertyName);
-                    }
-
-                    var query = constraintTranslator_.Translate(constraint);
-                    var executionResult = database_.ExecuteCommand(database_.CreateCommand(b => b.WithCommandText(query).WithConnectionString(options_.ConnectionString)));
+                    ProcessConstraints(entity, key);
                 });
             });
 
+        }
+
+        private void ProcessDatabaseTableCreation(EntityData entity)
+        {
+            var queryBuilder = new StringBuilder();
+            queryBuilder.AppendLine($"{SQLCommandConstants.USE} {options_.DatabaseName}");
+            queryBuilder.Append(dbQueryTranslator_.Translate(entity));
+            var executionResult = database_.ExecuteCommand(database_.CreateCommand(b => b.WithCommandText(queryBuilder.ToString()).WithConnectionString(options_.ConnectionString)));
+        }
+
+        private void ProcessConstraints(EntityData entity, IKey key)
+        {
+            IConstraint constraint = null;
+
+            if (key is ForeignKey foreignKey)
+            {
+                var referencedTableName = dbTableToPropertyName_[foreignKey.Relationship.RelatedEntity];
+                constraint = new ForeignKeyConstraint(key, entity.PropertyName, referencedTableName);
+            }
+            else if (key is PrimaryKey primaryKey)
+            {
+                constraint = new PrimaryKeyConstraint(key, entity.PropertyName);
+            }
+
+            var query = constraintTranslator_.Translate(constraint);
+            var executionResult = database_.ExecuteCommand(database_.CreateCommand(b => b.WithCommandText(query).WithConnectionString(options_.ConnectionString)));
         }
 
         private bool CheckDatabaseExists(string connectionString, string databaseName)
