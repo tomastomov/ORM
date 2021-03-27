@@ -68,6 +68,18 @@ namespace ORM.Contracts
                 });
             });
 
+            this.GetType()
+                .GetProperties()
+                .Where(p => p.PropertyType.GetGenericTypeDefinition() == typeof(DatabaseTable<>))
+                .Select(p => new
+                {
+                    Property = p,
+                    GenericArgument = p.PropertyType.GetGenericArguments()[0]
+                })
+                .Each(e =>
+                {
+                    e.Property.SetValue(this, Activator.CreateInstance(typeof(InternalDatabaseTable<>).MakeGenericType(e.GenericArgument)));
+                });
         }
 
         private void ProcessDatabaseTableCreation(EntityData entity)
