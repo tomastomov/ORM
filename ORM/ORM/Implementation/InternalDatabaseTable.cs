@@ -8,6 +8,7 @@ namespace ORM.Implementation
 {
     internal class InternalDatabaseTable<TEntity> : DatabaseTable<TEntity>, IQueryProvider
     {
+        private readonly IExpressionVisitor visitor = new GenericExpressionVisitor();
         public override Expression Expression => Expression.Constant(this);
 
         public override Type ElementType => typeof(TEntity);
@@ -22,7 +23,9 @@ namespace ORM.Implementation
 
         public IQueryable<TElement> CreateQuery<TElement>(Expression expression)
         {
-            throw new NotImplementedException();
+            visitor.Visit(expression);
+
+            return null;
         }
 
         public object Execute(Expression expression)
@@ -30,7 +33,9 @@ namespace ORM.Implementation
 
         public TResult Execute<TResult>(Expression expression)
         {
-            throw new NotImplementedException();
+            visitor.Visit(expression);
+
+            return default;
         }
         public override IEnumerator<TEntity> GetEnumerator() => ((IEnumerable<TEntity>)Provider.Execute(Expression.Constant(this))).GetEnumerator();
     }
