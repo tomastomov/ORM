@@ -7,7 +7,7 @@ using System.Text;
 
 namespace ORM.Contracts
 {
-    public abstract class DatabaseTable<TEntity> : IQueryable<TEntity>
+    public abstract class DatabaseTable<TEntity> : IQueryable<TEntity>, IOrderedQueryable<TEntity>
     {
         public virtual Type ElementType => throw new NotImplementedException();
 

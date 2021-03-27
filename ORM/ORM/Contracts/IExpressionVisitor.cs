@@ -7,6 +7,6 @@ namespace ORM.Contracts
 {
     public interface IExpressionVisitor
     {
-        Expression Visit(Expression expression);
+        string Visit(Expression expression);
     }
 }

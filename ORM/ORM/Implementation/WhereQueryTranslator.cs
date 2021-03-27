@@ -15,6 +15,7 @@ namespace ORM.Implementation
         }
         public string Translate(LambdaExpression query)
         {
+            queryBuilder_.Append("WHERE ");
             var body = query.Body as BinaryExpression;
 
             VisitBinary(body);
@@ -26,6 +27,7 @@ namespace ORM.Implementation
         {
             queryBuilder_.Append("(");
             Visit(node.Left);
+
             switch (node.NodeType)
             {
                 case ExpressionType.And:
@@ -45,6 +47,7 @@ namespace ORM.Implementation
                 default:
                     break;
             }
+
             Visit(node.Right);
 
             queryBuilder_.Append(")");
@@ -54,16 +57,8 @@ namespace ORM.Implementation
 
         protected override Expression VisitConstant(ConstantExpression node)
         {
-            switch (node.NodeType)
-            {
-                case ExpressionType.Constant:
-                    queryBuilder_.Append(node.Value);
-                    break;
+            queryBuilder_.Append(node.Value);
 
-                case ExpressionType.MemberAccess:
-                    queryBuilder_.Append(node.Value);
-                    break;
-            }
             return node;
         }
 

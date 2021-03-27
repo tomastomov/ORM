@@ -9,9 +9,17 @@ namespace ORM.Implementation
     internal class GenericExpressionVisitor : ExpressionVisitor, IExpressionVisitor
     {
         private string whereClause_;
-        Expression IExpressionVisitor.Visit(Expression expression)
+        private string orderByClause_;
+        string IExpressionVisitor.Visit(Expression expression)
         {
-            return Visit(expression);
+            Visit(expression);
+
+            var queryBuilder = new StringBuilder();
+
+            queryBuilder.AppendLine(whereClause_);
+            queryBuilder.AppendLine(orderByClause_);
+
+            return queryBuilder.ToString();
         }
 
         public override Expression Visit(Expression node)
@@ -20,8 +28,6 @@ namespace ORM.Implementation
             {
                 return null;
             }
-
-            var mc = (MethodCallExpression)node;
 
             if (node.NodeType == ExpressionType.Call)
             {
@@ -34,15 +40,24 @@ namespace ORM.Implementation
         protected override Expression VisitMethodCall(MethodCallExpression node)
         {
             var name = node.Method.Name;
+            LambdaExpression lambdaExpression;
 
             switch (name)
             {
                 case "Where":
-                    var unaryExpression = node.Arguments[1] as UnaryExpression;
-                    var lambdaExpression = unaryExpression.Operand as LambdaExpression;
+                    lambdaExpression = GetLambdaExpression(node);
                     var whereTranslator = new WhereQueryTranslator();
                     whereClause_ = whereTranslator.Translate(lambdaExpression);
+                    Visit(node.Arguments[0]);
                 break;
+                case "FirstOrDefault":
+                    break;
+                case "OrderBy":
+                    lambdaExpression = GetLambdaExpression(node);
+                    var orderByTranslator = new OrderByQueryTranslator();
+                    orderByClause_ = orderByTranslator.Translate(lambdaExpression);
+                    Visit(node.Arguments[0]);
+                    break;
                 default:
                     break;
             }
@@ -50,10 +65,10 @@ namespace ORM.Implementation
             return node;
         }
 
-        protected override Expression VisitBinary(BinaryExpression node)
+        private LambdaExpression GetLambdaExpression(MethodCallExpression methodCall)
         {
-
-            return node;
+            var unaryExpression = methodCall.Arguments[1] as UnaryExpression;
+            return unaryExpression.Operand as LambdaExpression;
         }
     }
 }

@@ -8,6 +8,11 @@ namespace ORM.Implementation
 {
     internal class SqlDatabase : IDatabase
     {
+        private string defaultConnectionString_;
+        public SqlDatabase(string connectionString)
+        {
+            defaultConnectionString_ = connectionString;
+        }
         public ICommand CreateCommand(Action<ICommandOptionsBuilder> builder)
         {
             var commandBuilder = new SqlCommandOptionsBuilder();
@@ -20,7 +25,7 @@ namespace ORM.Implementation
         {
             try
             {
-                using var connection = new SqlConnection(command.ConnectionString);
+                using var connection = new SqlConnection(command.ConnectionString ?? defaultConnectionString_);
                 var sqlCommand = new SqlCommand(command.CommandText, connection);
                 connection.Open();
                 var result = sqlCommand.ExecuteNonQuery();

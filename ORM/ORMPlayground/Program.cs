@@ -1,6 +1,7 @@
 ﻿using ORM.Contracts;
 using System;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace ORMPlayground
 {
@@ -12,9 +13,10 @@ namespace ORMPlayground
 
             context.CreateDatabase();
 
-            var query = context.Entities.Where(e => e.Id == "pesho");
+            var query = context.Entities.Where(e => e.Id == "pesho" && e.Name == "ivan")
+                .OrderBy(e => e.Name);
 
-            var myEntities = query.ToList();
+            var list = query.ToList();
         }
     }
 }
