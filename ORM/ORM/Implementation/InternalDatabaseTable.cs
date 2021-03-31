@@ -47,14 +47,15 @@ namespace ORM.Implementation
 
             var queryBuilder = new StringBuilder();
 
+            queryBuilder.AppendLine("USE MyORMDB");
             queryBuilder.AppendLine($"SELECT * FROM {TableName}");
             queryBuilder.Append(query);
 
-            var command = database_.CreateCommand(c => c.WithCommandText(query));
+            var command = database_.CreateCommand(c => c.WithCommandText(queryBuilder.ToString()));
             var result = database_.ExecuteCommand(command);
 
             return default;
         }
-        public override IEnumerator<TEntity> GetEnumerator() => ((IEnumerable<TEntity>)Provider.Execute(Expression)).GetEnumerator();
+        public override IEnumerator<TEntity> GetEnumerator() => (Provider.Execute<IEnumerable<TEntity>>(Expression)).GetEnumerator();
     }
 }

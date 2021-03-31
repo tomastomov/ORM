@@ -9,5 +9,7 @@ namespace ORM.Contracts
         ICommand CreateCommand(Action<ICommandOptionsBuilder> builder);
 
         ICommandExecutionResult ExecuteCommand(ICommand command);
+
+        TResult ExecuteCommand<TResult>(ICommand command);
     }
 }

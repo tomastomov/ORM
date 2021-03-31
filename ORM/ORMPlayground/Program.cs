@@ -13,8 +13,8 @@ namespace ORMPlayground
 
             context.CreateDatabase();
 
-            var query = context.Entities.Where(e => e.Id == "pesho" && e.Name == "ivan")
-                .OrderBy(e => e.Name);
+            var query = context.Entities.Where(e => e.Name == "pesho")
+                .OrderBy(e => e.Id);
 
             var list = query.ToList();
         }

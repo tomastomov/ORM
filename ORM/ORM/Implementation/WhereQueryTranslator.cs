@@ -57,7 +57,7 @@ namespace ORM.Implementation
 
         protected override Expression VisitConstant(ConstantExpression node)
         {
-            queryBuilder_.Append(node.Value);
+            queryBuilder_.Append($"'{node.Value}'");
 
             return node;
         }

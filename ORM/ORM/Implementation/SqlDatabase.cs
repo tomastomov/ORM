@@ -18,23 +18,61 @@ namespace ORM.Implementation
             var commandBuilder = new SqlCommandOptionsBuilder();
             builder?.Invoke(commandBuilder);
 
-            return commandBuilder.Build(); 
+            return commandBuilder.Build();
         }
 
         public ICommandExecutionResult ExecuteCommand(ICommand command)
         {
             try
             {
-                using var connection = new SqlConnection(command.ConnectionString ?? defaultConnectionString_);
-                var sqlCommand = new SqlCommand(command.CommandText, connection);
-                connection.Open();
-                var result = sqlCommand.ExecuteNonQuery();
+                var affectedRows = ExecuteCommandImpl(command, (connection, sqlCommand) => sqlCommand.ExecuteNonQuery());
             }
             catch (Exception ex)
             {
             }
-           
+
             return new CommandExecutionResult(true);
         }
+
+        private TResult ExecuteCommandImpl<TResult>(ICommand command, Func<SqlConnection, SqlCommand, TResult> executeCommand)
+        {
+            using var connection = GetConnection(command);
+            var sqlCommand = GetSqlCommand(command, connection);
+            connection.Open();
+
+            return executeCommand(connection, sqlCommand);
+        }
+
+        public TResult ExecuteCommand<TResult>(ICommand command)
+        {
+            try
+            {
+                return ExecuteCommandImpl(command, (connection, sqlCommand) => ExecuteQuery<TResult>(sqlCommand));
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return default;
+        }
+
+        private TResult ExecuteQuery<TResult>(SqlCommand command)
+        {
+            var reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                ///translate the sql type to TResult..
+            }
+
+            return default;
+        }
+
+        private SqlConnection GetConnection(ICommand command)
+            => new SqlConnection(command.ConnectionString ?? defaultConnectionString_);
+
+        private SqlCommand GetSqlCommand(ICommand command, SqlConnection connection)
+            => new SqlCommand(command.CommandText, connection);
     }
 }
