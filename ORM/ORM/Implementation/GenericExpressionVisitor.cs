@@ -77,8 +77,7 @@ namespace ORM.Implementation
                     Visit(node.Arguments[0]);
                     break;
                 case "Select":
-                    var br = node;
-                    lambdaExpression = GetLambdaExpression(br);
+                    lambdaExpression = GetLambdaExpression(node);
                     var selectTranslator = new SelectQueryTranslator();
                     SelectClause = selectTranslator.Translate(lambdaExpression);
                     Visit(node.Arguments[0]);

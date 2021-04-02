@@ -35,7 +35,7 @@ namespace ORM.Implementation
                 entities.Add(entityInstance);
             }
 
-            return !isEnumerable ? entities[0] : entities;
+            return !isEnumerable ? (entities.Count > 0 ? entities[0] : null) : entities;
         }
 
         private bool IsEnumerable(Type type)
