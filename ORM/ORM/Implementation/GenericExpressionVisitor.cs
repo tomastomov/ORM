@@ -1,4 +1,5 @@
 ﻿using ORM.Contracts;
+using ORM.Implementation.Translators;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -8,16 +9,18 @@ namespace ORM.Implementation
 {
     internal class GenericExpressionVisitor : ExpressionVisitor, IExpressionVisitor
     {
-        private string whereClause_;
-        private string orderByClause_;
+        public string WhereClause { get; private set; }
+        public string OrderByClause { get; private set; }
+        public string SelectClause { get; private set; }
+
         string IExpressionVisitor.Visit(Expression expression)
         {
             Visit(expression);
 
             var queryBuilder = new StringBuilder();
 
-            queryBuilder.AppendLine(whereClause_);
-            queryBuilder.AppendLine(orderByClause_);
+            queryBuilder.AppendLine(WhereClause);
+            queryBuilder.AppendLine(OrderByClause);
 
             return queryBuilder.ToString();
         }
@@ -47,7 +50,7 @@ namespace ORM.Implementation
                 case "Where":
                     lambdaExpression = GetLambdaExpression(node);
                     var whereTranslator = new WhereQueryTranslator();
-                    whereClause_ = whereTranslator.Translate(lambdaExpression);
+                    WhereClause = whereTranslator.Translate(lambdaExpression);
                     Visit(node.Arguments[0]);
                 break;
                 case "FirstOrDefault":
@@ -55,7 +58,14 @@ namespace ORM.Implementation
                 case "OrderBy":
                     lambdaExpression = GetLambdaExpression(node);
                     var orderByTranslator = new OrderByQueryTranslator();
-                    orderByClause_ = orderByTranslator.Translate(lambdaExpression);
+                    OrderByClause = orderByTranslator.Translate(lambdaExpression);
+                    Visit(node.Arguments[0]);
+                    break;
+                case "Select":
+                    var br = node;
+                    lambdaExpression = GetLambdaExpression(br);
+                    var selectTranslator = new SelectQueryTranslator();
+                    SelectClause = selectTranslator.Translate(lambdaExpression);
                     Visit(node.Arguments[0]);
                     break;
                 default:

@@ -5,6 +5,7 @@ using ORM.Implementation;
 using ORM.Implementation.Builders;
 using ORM.Implementation.Constraints;
 using ORM.Implementation.Keys;
+using ORM.Implementation.Translators;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;

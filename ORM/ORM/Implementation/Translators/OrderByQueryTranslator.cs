@@ -2,7 +2,7 @@
 using System.Linq.Expressions;
 using System.Text;
 
-namespace ORM.Implementation
+namespace ORM.Implementation.Translators
 {
     internal class OrderByQueryTranslator : ExpressionVisitor, IQueryTranslator<LambdaExpression, string>
     {

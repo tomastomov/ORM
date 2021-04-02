@@ -7,9 +7,9 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace ORM.Implementation
+namespace ORM.Implementation.Translators
 {
-    internal class DatabaseCreationQueryTranslator : IQueryTranslator<EntityData ,string>
+    internal class DatabaseCreationQueryTranslator : IQueryTranslator<EntityData, string>
     {
         private readonly IModelDataStorage<Type> modelDataStorage_;
         private readonly ISqlTypeConverter converter_ = new SqlTypeConverter();

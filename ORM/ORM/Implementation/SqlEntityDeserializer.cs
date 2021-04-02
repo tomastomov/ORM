@@ -25,10 +25,11 @@ namespace ORM.Implementation
 
             var entities = (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(type));
 
+            // TODO add deserializing of structs...
+
             while (reader.MoveNext())
             {
                 var entityInstance = Activator.CreateInstance(type);
-                Convert.ChangeType(entityInstance, type);
                 properties.Each(p => p.SetValue(entityInstance, reader.Read(p.PropertyType, p.Name)));
                 entities.Add(entityInstance);
             }

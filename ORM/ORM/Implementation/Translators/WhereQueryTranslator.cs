@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
 
-namespace ORM.Implementation
+namespace ORM.Implementation.Translators
 {
     internal class WhereQueryTranslator : ExpressionVisitor, IQueryTranslator<LambdaExpression, string>
     {

@@ -10,6 +10,8 @@ namespace ORMPlayground
 
         public string Name { get; set; }
 
+        public int Age { get; set; }
+
         public virtual ICollection<Product> Products { get; set; }
     }
 }
