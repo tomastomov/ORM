@@ -28,7 +28,7 @@ namespace ORM.Contracts
             dbQueryTranslator_ = new DatabaseCreationQueryTranslator(modelDataStorage_);
             constraintTranslator_ = new ConstraintTranslator(options);
             dbTableToPropertyName_ = new Dictionary<Type, string>();
-            database_ = new SqlDatabase(options_.ConnectionString);
+            database_ = new SqlDatabase(new SqlEntityDeserializer(), options_.ConnectionString);
         }
 
         public virtual void OnModelCreating(IModelBuilder builder)

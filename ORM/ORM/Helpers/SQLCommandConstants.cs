@@ -14,5 +14,6 @@ namespace ORM.Helpers
         public const string FOREIGN_KEY_PREFIX = "FK_";
         public const string PRIMARY_KEY = "PRIMARY KEY";
         public const string FOREIGN_KEY = "FOREIGN KEY";
+        public const string NOT_NULL = "NOT NULL";
     }
 }

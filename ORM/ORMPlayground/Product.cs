@@ -12,7 +12,7 @@ namespace ORMPlayground
 
         public decimal Price { get; set; }
 
-        public MySimpleEntity Entity { get; set; }
+        public virtual MySimpleEntity Entity { get; set; }
 
         public string EntityId { get; set; }
     }

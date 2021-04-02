@@ -29,8 +29,7 @@ namespace ORM.Implementation
 
         public IQueryable CreateQuery(Expression expression)
         {
-            
-            return null;
+            throw new NotSupportedException();
         }
 
         public IQueryable<TElement> CreateQuery<TElement>(Expression expression)
@@ -52,9 +51,9 @@ namespace ORM.Implementation
             queryBuilder.Append(query);
 
             var command = database_.CreateCommand(c => c.WithCommandText(queryBuilder.ToString()));
-            var result = database_.ExecuteCommand(command);
+            var result = database_.ExecuteCommand<TResult>(command);
 
-            return default;
+            return result;
         }
         public override IEnumerator<TEntity> GetEnumerator() => (Provider.Execute<IEnumerable<TEntity>>(Expression)).GetEnumerator();
     }

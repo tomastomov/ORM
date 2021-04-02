@@ -28,7 +28,7 @@ namespace ORM.Implementation
                 .Aggregate(builder, (sb, next) =>
                 {
                     var sqlType = converter_.Convert<Type, SqlDataType>(next.PropertyType);
-                    var nullConstraint = typeof(Nullable<>).IsAssignableFrom(next.PropertyType) ? string.Empty : "NOT NULL";
+                    var nullConstraint = typeof(Nullable<>).IsAssignableFrom(next.PropertyType) ? string.Empty : SQLCommandConstants.NOT_NULL;
                     sb.AppendLine($"{next.Name} {sqlType.SqlType} {nullConstraint},");
                     return sb;
                 });

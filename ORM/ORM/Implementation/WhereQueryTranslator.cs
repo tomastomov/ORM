@@ -57,7 +57,15 @@ namespace ORM.Implementation
 
         protected override Expression VisitConstant(ConstantExpression node)
         {
-            queryBuilder_.Append($"'{node.Value}'");
+            if (node.Value.GetType() == typeof(string))
+            {
+                queryBuilder_.Append($"'{node.Value}'");
+
+            }
+            else
+            {
+                queryBuilder_.Append($"{node.Value}");
+            }
 
             return node;
         }

@@ -8,9 +8,11 @@ namespace ORM.Implementation
 {
     internal class SqlDatabase : IDatabase
     {
-        private string defaultConnectionString_;
-        public SqlDatabase(string connectionString)
+        private readonly string defaultConnectionString_;
+        private readonly IEntityDeserializer deserializer_;
+        public SqlDatabase(IEntityDeserializer deserializer, string connectionString)
         {
+            deserializer_ = deserializer;
             defaultConnectionString_ = connectionString;
         }
         public ICommand CreateCommand(Action<ICommandOptionsBuilder> builder)
@@ -61,12 +63,7 @@ namespace ORM.Implementation
         {
             var reader = command.ExecuteReader();
 
-            while (reader.Read())
-            {
-                ///translate the sql type to TResult..
-            }
-
-            return default;
+            return deserializer_.Deserialize<TResult>(new SqlDbDataReader(reader));
         }
 
         private SqlConnection GetConnection(ICommand command)
