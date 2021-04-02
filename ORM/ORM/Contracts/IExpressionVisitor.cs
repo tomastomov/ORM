@@ -10,7 +10,6 @@ namespace ORM.Contracts
         string Visit(Expression expression);
 
         public string WhereClause { get; }
-        public string OrderByClause { get; }
         public string SelectClause { get; }
     }
 }

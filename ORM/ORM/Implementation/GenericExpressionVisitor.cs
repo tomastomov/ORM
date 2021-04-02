@@ -1,7 +1,9 @@
 ﻿using ORM.Contracts;
+using ORM.Implementation.Enums;
 using ORM.Implementation.Translators;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 
@@ -9,8 +11,13 @@ namespace ORM.Implementation
 {
     internal class GenericExpressionVisitor : ExpressionVisitor, IExpressionVisitor
     {
+        private ICollection<string> orderByClauses_;
+
+        public GenericExpressionVisitor()
+        {
+            orderByClauses_ = new List<string>();
+        }
         public string WhereClause { get; private set; }
-        public string OrderByClause { get; private set; }
         public string SelectClause { get; private set; }
 
         string IExpressionVisitor.Visit(Expression expression)
@@ -20,9 +27,13 @@ namespace ORM.Implementation
             var queryBuilder = new StringBuilder();
 
             queryBuilder.AppendLine(WhereClause);
-            queryBuilder.AppendLine(OrderByClause);
-
-            return queryBuilder.ToString();
+            queryBuilder.Append("ORDER BY ");
+            orderByClauses_ = orderByClauses_.Reverse().ToList();
+            return orderByClauses_.Aggregate(queryBuilder, (builder, next) =>
+            {
+                builder.Append($"{next},");
+                return builder;
+            }, builder => builder.ToString().TrimEnd(','));
         }
 
         public override Expression Visit(Expression node)
@@ -55,10 +66,14 @@ namespace ORM.Implementation
                 break;
                 case "FirstOrDefault":
                     break;
+                case "ThenBy":
                 case "OrderBy":
+                case "OrderByDescending":
+                case "ThenByDescending":
+                    var sortingType = name.Contains("Descending") ? SortingType.DESC : SortingType.ASC;
                     lambdaExpression = GetLambdaExpression(node);
-                    var orderByTranslator = new OrderByQueryTranslator();
-                    OrderByClause = orderByTranslator.Translate(lambdaExpression);
+                    var orderByTranslator = new OrderByQueryTranslator(sortingType);
+                    orderByClauses_.Add(orderByTranslator.Translate(lambdaExpression));
                     Visit(node.Arguments[0]);
                     break;
                 case "Select":

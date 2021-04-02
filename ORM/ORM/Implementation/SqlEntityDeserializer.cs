@@ -13,6 +13,7 @@ namespace ORM.Implementation
     {
         public T Deserialize<T>(IDatabaseDataReader reader)
             => (T)DeserializeImpl(typeof(T), reader, false);
+
         private object DeserializeImpl(Type type, IDatabaseDataReader reader, bool isEnumerable)
         {
             if (IsEnumerable(type) && type.IsGenericType)

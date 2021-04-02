@@ -1,4 +1,5 @@
 ﻿using ORM.Contracts;
+using ORM.Implementation.Enums;
 using System.Linq.Expressions;
 using System.Text;
 
@@ -7,15 +8,17 @@ namespace ORM.Implementation.Translators
     internal class OrderByQueryTranslator : ExpressionVisitor, IQueryTranslator<LambdaExpression, string>
     {
         private readonly StringBuilder queryBuilder_;
-        public OrderByQueryTranslator()
+        private readonly SortingType sortingType_;
+        public OrderByQueryTranslator(SortingType sortingType)
         {
             queryBuilder_ = new StringBuilder();
+            sortingType_ = sortingType;
         }
 
         public string Translate(LambdaExpression query)
         {
-            queryBuilder_.Append("ORDER BY ");
             Visit(query.Body);
+            queryBuilder_.Append($" {sortingType_}");
             return queryBuilder_.ToString();
         }
 
