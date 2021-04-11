@@ -13,7 +13,7 @@ namespace ORMPlayground
 
             context.CreateDatabase();
 
-            var query = context.Entities
+            var query = context.Entities.Where(p => p.Name == "pesho")
                 .Select(e => new MySimpleDTO()
                 {
                     Id = e.Id,
@@ -21,14 +21,13 @@ namespace ORMPlayground
                     Age = e.Age
                 })
                 .OrderBy(e => e.Age)
-                .ThenByDescending(e => e.Id);
+                .ThenByDescending(e => e.Id)
+                .FirstOrDefault();
 
-            var list = query.ToList();
-
-            foreach (var entity in list)
-            {
-                Console.WriteLine(entity);
-            }
+            //foreach (var entity in query)
+            //{
+            //    Console.WriteLine(entity);
+            //}
         }
 
         private class MySimpleDTO

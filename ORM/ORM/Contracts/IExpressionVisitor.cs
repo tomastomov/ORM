@@ -9,7 +9,8 @@ namespace ORM.Contracts
     {
         string Visit(Expression expression);
 
-        public string WhereClause { get; }
-        public string SelectClause { get; }
+        string WhereClause { get; }
+        string SelectClause { get; }
+        string FirstOrDefaultClause { get; }
     }
 }

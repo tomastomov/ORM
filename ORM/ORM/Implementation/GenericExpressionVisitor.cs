@@ -20,6 +20,8 @@ namespace ORM.Implementation
         public string WhereClause { get; private set; }
         public string SelectClause { get; private set; }
 
+        public string FirstOrDefaultClause { get; private set; }
+
         string IExpressionVisitor.Visit(Expression expression)
         {
             Visit(expression);
@@ -65,6 +67,8 @@ namespace ORM.Implementation
                     Visit(node.Arguments[0]);
                 break;
                 case "FirstOrDefault":
+                    FirstOrDefaultClause = "TOP 1 *";
+                    Visit(node.Arguments[0]);
                     break;
                 case "ThenBy":
                 case "OrderBy":

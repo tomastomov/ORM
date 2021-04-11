@@ -47,7 +47,7 @@ namespace ORM.Implementation
             var queryBuilder = new StringBuilder();
 
             queryBuilder.AppendLine("USE MyORMDB");
-            var selectCount = visitor_.SelectClause ?? "*";
+            var selectCount = visitor_.FirstOrDefaultClause ?? "*";
             queryBuilder.AppendLine($"SELECT {selectCount} FROM {TableName}");
             queryBuilder.Append(query);
 
