@@ -11,9 +11,11 @@ namespace ORM.Implementation
     {
         private readonly IExpressionVisitor visitor_;
         private readonly IDatabase database_;
-        public InternalDatabaseTable(IDatabase database, IExpressionVisitor visitor, string tableName, Expression expression = null)
+        private readonly IStateManager stateManager_;
+        public InternalDatabaseTable(IDatabase database, IStateManager stateManager, IExpressionVisitor visitor, string tableName, Expression expression = null)
         {
             database_ = database;
+            stateManager_ = stateManager;
             TableName = tableName;
             visitor_ = visitor;
             Expression = expression ?? Expression.Constant(this);
@@ -32,13 +34,16 @@ namespace ORM.Implementation
             throw new NotSupportedException();
         }
 
-        public IQueryable<TElement> CreateQuery<TElement>(Expression expression)
-        {
-            return new InternalDatabaseTable<TElement>(database_, visitor_, TableName, expression);
-        }
+        public IQueryable<TElement> CreateQuery<TElement>(Expression expression) 
+            => new InternalDatabaseTable<TElement>(database_, stateManager_, visitor_, TableName, expression);
 
         public object Execute(Expression expression)
             => Provider.Execute<object>(expression);
+
+        public override void Add(TEntity entity)
+        {
+            stateManager_.AddEntity(entity);
+        }
 
         public TResult Execute<TResult>(Expression expression)
         {
@@ -56,6 +61,7 @@ namespace ORM.Implementation
 
             return result;
         }
-        public override IEnumerator<TEntity> GetEnumerator() => (Provider.Execute<IEnumerable<TEntity>>(Expression)).GetEnumerator();
+        public override IEnumerator<TEntity> GetEnumerator() 
+            => (Provider.Execute<IEnumerable<TEntity>>(Expression)).GetEnumerator();
     }
 }

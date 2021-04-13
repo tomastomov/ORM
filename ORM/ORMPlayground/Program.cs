@@ -18,7 +18,7 @@ namespace ORMPlayground
                 {
                     Id = e.Id,
                     Name = e.Name,
-                    Age = e.Age
+                    Age = e.Age,
                 })
                 .OrderBy(e => e.Age)
                 .ThenByDescending(e => e.Id)

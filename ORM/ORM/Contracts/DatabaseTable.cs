@@ -15,6 +15,8 @@ namespace ORM.Contracts
 
         public virtual IQueryProvider Provider => throw new NotImplementedException();
 
+        public virtual void Add(TEntity entity) => throw new NotImplementedException();
+
         public virtual IEnumerator<TEntity> GetEnumerator()
         {
             throw new NotImplementedException();
