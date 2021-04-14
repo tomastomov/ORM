@@ -10,5 +10,9 @@ namespace ORM.Contracts
         void Add(TEntity key, ModelData modelData);
 
         ModelData Get(TEntity key);
+
+        bool TryGetValue(TEntity key, out ModelData modelData);
+
+        IKey GetPrimaryKey(TEntity entity);
     }
 }

@@ -11,6 +11,14 @@ namespace ORM.Implementation
 {
     internal class SqlEntityDeserializer : IEntityDeserializer
     {
+        private readonly IModelDataStorage<Type> modelDataStorage_;
+        private readonly IStateManager stateManager_;
+        public SqlEntityDeserializer(IModelDataStorage<Type> modelDataStorage, IStateManager stateManager)
+        {
+            modelDataStorage_ = modelDataStorage;
+            stateManager_ = stateManager;
+        }
+
         public T Deserialize<T>(IDatabaseDataReader reader)
             => (T)DeserializeImpl(typeof(T), reader, false);
 
@@ -32,6 +40,12 @@ namespace ORM.Implementation
             {
                 var entityInstance = Activator.CreateInstance(type);
                 properties.Each(p => p.SetValue(entityInstance, reader.Read(p.PropertyType, p.Name)));
+
+                if (modelDataStorage_.TryGetValue(entityInstance.GetType(), out _))
+                {
+                    entityInstance = stateManager_.GetOrAddEntity(entityInstance);
+                }
+
                 entities.Add(entityInstance);
             }
 

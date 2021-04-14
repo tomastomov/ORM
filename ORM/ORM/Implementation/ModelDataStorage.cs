@@ -1,6 +1,8 @@
 ﻿using ORM.Contracts;
+using ORM.Implementation.Keys;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace ORM.Implementation
@@ -25,5 +27,15 @@ namespace ORM.Implementation
 
             throw new ArgumentException($"No such key: {key} found");
         }
+
+        public IKey GetPrimaryKey(TEntity entity)
+        {
+            var entityModel = Get(entity);
+
+            return entityModel.Keys.FirstOrDefault(k => k.GetType() == typeof(PrimaryKey));
+        }
+
+        public bool TryGetValue(TEntity key, out ModelData modelData)
+            => models_.TryGetValue(key, out modelData);
     }
 }

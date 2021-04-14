@@ -11,6 +11,7 @@ namespace ORM.Implementation
     internal class SqlDbDataReader : IDatabaseDataReader
     {
         private readonly DbDataReader sqlDataReader_;
+
         public SqlDbDataReader(DbDataReader dbDataReader)
         {
             sqlDataReader_ = dbDataReader;

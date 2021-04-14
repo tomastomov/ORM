@@ -29,6 +29,11 @@ namespace ORM.Implementation
             var queryBuilder = new StringBuilder();
 
             queryBuilder.AppendLine(WhereClause);
+            if (orderByClauses_.Count == 0)
+            {
+                return queryBuilder.ToString();
+            }
+
             queryBuilder.Append("ORDER BY ");
             orderByClauses_ = orderByClauses_.Reverse().ToList();
             return orderByClauses_.Aggregate(queryBuilder, (builder, next) =>

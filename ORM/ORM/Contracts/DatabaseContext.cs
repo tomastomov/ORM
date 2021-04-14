@@ -22,6 +22,7 @@ namespace ORM.Contracts
         private readonly IModelDataStorage<Type> modelDataStorage_;
         private readonly IConstraintTranslator constraintTranslator_;
         private IDictionary<Type, string> dbTableToPropertyName_;
+        private readonly IStateManager stateManager_;
         public DatabaseContext(DatabaseContextOptions options)
         {
             options_ = options;
@@ -29,7 +30,8 @@ namespace ORM.Contracts
             dbQueryTranslator_ = new DatabaseCreationQueryTranslator(modelDataStorage_);
             constraintTranslator_ = new ConstraintTranslator(options);
             dbTableToPropertyName_ = new Dictionary<Type, string>();
-            database_ = new SqlDatabase(new SqlEntityDeserializer(), options_.ConnectionString);
+            stateManager_ = new StateManager(modelDataStorage_);
+            database_ = new SqlDatabase(new SqlEntityDeserializer(modelDataStorage_, stateManager_), options_.ConnectionString);
         }
 
         public virtual void OnModelCreating(IModelBuilder builder)
@@ -80,7 +82,7 @@ namespace ORM.Contracts
                 })
                 .Each(e =>
                 {
-                    e.Property.SetValue(this, Activator.CreateInstance(typeof(InternalDatabaseTable<>).MakeGenericType(e.GenericArgument), new object[4] {database_, new GenericExpressionVisitor(), e.Property.Name, null }));
+                    e.Property.SetValue(this, Activator.CreateInstance(typeof(InternalDatabaseTable<>).MakeGenericType(e.GenericArgument), new object[5] {database_, stateManager_, new GenericExpressionVisitor(), e.Property.Name, null }));
                 });
         }
 
