@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ORM.Contracts
 {
-    internal interface IUpdatedEntity : IIdentifiableEntity<object>
+    internal interface IUpdatedEntity : IIdentifiableEntity
     {
         string TableName { get; }
 

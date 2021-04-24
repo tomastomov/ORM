@@ -139,8 +139,9 @@ namespace ORM.Contracts
                     .Each(update =>
                         {
                             var sb = new StringBuilder();
-                            sb.AppendLine($"USE: {options_.DatabaseName}");
-                            var command = database_.CreateCommand(builder => builder.WithCommandText(updateQueryTranslator_.Translate(update)));
+                            sb.AppendLine($"USE {options_.DatabaseName}");
+                            sb.AppendLine(updateQueryTranslator_.Translate(update));
+                            var command = database_.CreateCommand(builder => builder.WithCommandText(sb.ToString()));
                             database_.ExecuteCommand(command);
                         });
                 return true;

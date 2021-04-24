@@ -21,12 +21,12 @@ namespace ORM.Implementation
             queryBuilder.AppendLine($"UPDATE {query.TableName}");
             queryBuilder.Append("SET ");
 
-            queryBuilder.AppendLine(query.EntityUpdates.Aggregate(new StringBuilder(), (sb, curr) =>
+           queryBuilder.AppendLine(query.EntityUpdates.Aggregate(new StringBuilder(), (sb, curr) =>
             {
-                sb.AppendLine($"{curr.ColumnName} = {curr.UpdatedValue}, ");
+                sb.Append($"{curr.ColumnName} = {curr.UpdatedValue},");
 
                 return sb;
-            }, sb => sb.ToString().TrimEnd(' ').TrimEnd(',')));
+            }, sb => sb.ToString().TrimEnd(',', ' ')));
 
             queryBuilder.AppendLine(whereTranslator_.Translate(query.DbIdentifier));
 

@@ -8,7 +8,7 @@ namespace ORM.Implementation
 {
     internal class UpdatedEntity : IUpdatedEntity
     {
-        public UpdatedEntity(string tableName, IEnumerable<IEntityUpdate> updates, Expression<Func<object, bool>> dbIdentifier)
+        public UpdatedEntity(string tableName, IEnumerable<IEntityUpdate> updates, LambdaExpression dbIdentifier)
         {
             TableName = tableName;
             EntityUpdates = updates;
@@ -18,6 +18,6 @@ namespace ORM.Implementation
 
         public IEnumerable<IEntityUpdate> EntityUpdates { get; private set; }
 
-        public Expression<Func<object, bool>> DbIdentifier { get; private set; }
+        public LambdaExpression DbIdentifier { get; private set; }
     }
 }

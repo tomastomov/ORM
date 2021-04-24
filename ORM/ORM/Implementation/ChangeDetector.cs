@@ -26,11 +26,13 @@ namespace ORM.Implementation
                   .Select(p => new EntityUpdate(p.Name, p.GetValue(e.Entity))), CreateIdentifier(e.Entity, modelDataStorage_.GetPrimaryKey(e.Entity.GetType()).Property)));
         }
 
-        private Expression<Func<T, bool>> CreateIdentifier<T>(T instance, PropertyInfo property)
+        private LambdaExpression CreateIdentifier<T>(T instance, PropertyInfo property)
         {
-            var param = Expression.Parameter(typeof(T), "obj");
-            var binaryExpr = Expression.MakeBinary(ExpressionType.Equal, Expression.Constant(property.Name), Expression.Constant(property.GetValue(instance)));
-            Expression<Func<T, bool>> expr = Expression.Lambda<Func<T, bool>>(binaryExpr, param);
+            var param = Expression.Parameter(instance.GetType(), "obj");
+            
+            var binaryExpr = Expression.MakeBinary(ExpressionType.Equal, Expression.MakeMemberAccess(param, property), Expression.Constant(property.GetValue(instance)));
+            var func = typeof(Func<,>).MakeGenericType(instance.GetType(), typeof(bool));
+            var expr = Expression.Lambda(func, binaryExpr, param);
 
             return expr;
         }
