@@ -61,6 +61,7 @@ namespace ORM.Implementation
 
             return result;
         }
+
         public override IEnumerator<TEntity> GetEnumerator() 
             => (Provider.Execute<IEnumerable<TEntity>>(Expression)).GetEnumerator();
     }

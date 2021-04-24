@@ -17,12 +17,15 @@ namespace ORM.Contracts
     public abstract class DatabaseContext : IDatabaseContext
     {
         private DatabaseContextOptions options_;
+        private readonly IQueryTranslator<IUpdatedEntity, string> updateQueryTranslator_;
         private readonly IQueryTranslator<EntityData, string> dbQueryTranslator_;
         private readonly IDatabase database_;
         private readonly IModelDataStorage<Type> modelDataStorage_;
         private readonly IConstraintTranslator constraintTranslator_;
         private IDictionary<Type, string> dbTableToPropertyName_;
-        private readonly IStateManager stateManager_;
+        private IStateManager stateManager_;
+        private ITableNameProvider tableNameProvider_;
+        private IChangeDetector changeDetector_;
         public DatabaseContext(DatabaseContextOptions options)
         {
             options_ = options;
@@ -32,11 +35,14 @@ namespace ORM.Contracts
             dbTableToPropertyName_ = new Dictionary<Type, string>();
             stateManager_ = new StateManager(modelDataStorage_);
             database_ = new SqlDatabase(new SqlEntityDeserializer(modelDataStorage_, stateManager_), options_.ConnectionString);
+            tableNameProvider_ = new TableNameProvider();
+            changeDetector_ = new ChangeDetector(tableNameProvider_);
+            updateQueryTranslator_ = new UpdateQueryTranslator(new WhereQueryTranslator());
         }
 
         public virtual void OnModelCreating(IModelBuilder builder)
         {
-            
+
         }
 
         public void CreateDatabase()
@@ -82,7 +88,8 @@ namespace ORM.Contracts
                 })
                 .Each(e =>
                 {
-                    e.Property.SetValue(this, Activator.CreateInstance(typeof(InternalDatabaseTable<>).MakeGenericType(e.GenericArgument), new object[5] {database_, stateManager_, new GenericExpressionVisitor(), e.Property.Name, null }));
+                    e.Property.SetValue(this, Activator.CreateInstance(typeof(InternalDatabaseTable<>).MakeGenericType(e.GenericArgument), new object[5] { database_, stateManager_, new GenericExpressionVisitor(), e.Property.Name, null }));
+                    tableNameProvider_.AddTableName(e.GenericArgument, e.Property.Name);
                 });
         }
 
@@ -121,6 +128,24 @@ namespace ORM.Contracts
                     connection.Open();
                     return (command.ExecuteScalar() != DBNull.Value);
                 }
+            }
+        }
+
+        public virtual bool SaveChanges()
+        {
+            try
+            {
+                var updatedEntries = changeDetector_.DetectChanges(stateManager_.GetTrackedEntities<object>())
+                    .Each(update =>
+                        {
+                            var command = database_.CreateCommand(builder => builder.WithCommandText(updateQueryTranslator_.Translate(update)));
+                            database_.ExecuteCommand(command);
+                        });
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
             }
         }
     }

@@ -4,10 +4,10 @@ using System.Text;
 
 namespace ORM.Contracts
 {
-    public interface IDatabaseContext
+    internal interface IEntityUpdate
     {
-        void CreateDatabase();
+        string ColumnName { get; }
 
-        bool SaveChanges();
+        object UpdatedValue { get; }
     }
 }

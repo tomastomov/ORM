@@ -4,10 +4,8 @@ using System.Text;
 
 namespace ORM.Contracts
 {
-    public interface IDatabaseContext
+    internal interface IDatabaseNameProvider
     {
-        void CreateDatabase();
-
-        bool SaveChanges();
+        string DatabaseName { get; }
     }
 }
