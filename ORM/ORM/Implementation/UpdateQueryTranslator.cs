@@ -23,7 +23,7 @@ namespace ORM.Implementation
 
            queryBuilder.AppendLine(query.EntityUpdates.Aggregate(new StringBuilder(), (sb, curr) =>
             {
-                sb.Append($"{curr.ColumnName} = {curr.UpdatedValue},");
+                sb.Append($"{curr.ColumnName} = '{curr.UpdatedValue}',");
 
                 return sb;
             }, sb => sb.ToString().TrimEnd(',', ' ')));

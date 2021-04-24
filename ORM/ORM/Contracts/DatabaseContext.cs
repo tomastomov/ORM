@@ -136,6 +136,7 @@ namespace ORM.Contracts
             try
             {
                 var updatedEntries = changeDetector_.DetectChanges(stateManager_.GetTrackedEntities<object>())
+                    .Where(update => update.EntityUpdates.Count() > 0)
                     .Each(update =>
                         {
                             var sb = new StringBuilder();

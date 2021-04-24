@@ -15,6 +15,7 @@ namespace ORM.Implementation.Translators
         }
         public string Translate(LambdaExpression query)
         {
+            queryBuilder_.Clear();
             queryBuilder_.Append("WHERE ");
             var body = query.Body as BinaryExpression;
 
