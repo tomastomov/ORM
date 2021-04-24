@@ -36,11 +36,11 @@ namespace ORM.Implementation
                 trackedEntities_.Add((entityType, primaryKey), trackedEntity);
             }
 
-            return (TEntity)trackedEntity;
+            return (TEntity)trackedEntity.Entity;
         }
 
         public IEnumerable<ITrackedInternalEntity<TEntity>> GetTrackedEntities<TEntity>()
-            => (IEnumerable<ITrackedInternalEntity<TEntity>>)trackedEntities_.Values.ToList();
+            => trackedEntities_.Values.Cast<ITrackedInternalEntity<TEntity>>();
 
         private string GetPrimaryKeyValue<TEntity>(TEntity entity)
             => modelDataStorage_.GetPrimaryKey(entity.GetType())?.Property.GetValue(entity)?.ToString();

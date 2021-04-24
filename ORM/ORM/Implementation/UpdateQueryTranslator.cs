@@ -19,7 +19,7 @@ namespace ORM.Implementation
             var queryBuilder = new StringBuilder();
 
             queryBuilder.AppendLine($"UPDATE {query.TableName}");
-            queryBuilder.AppendLine("SET ");
+            queryBuilder.Append("SET ");
 
             queryBuilder.AppendLine(query.EntityUpdates.Aggregate(new StringBuilder(), (sb, curr) =>
             {
@@ -28,7 +28,7 @@ namespace ORM.Implementation
                 return sb;
             }, sb => sb.ToString().TrimEnd(' ').TrimEnd(',')));
 
-            queryBuilder.AppendLine(whereTranslator_.Translate(query.DbIdentifier.Body as LambdaExpression));
+            queryBuilder.AppendLine(whereTranslator_.Translate(query.DbIdentifier));
 
             return queryBuilder.ToString();
         }

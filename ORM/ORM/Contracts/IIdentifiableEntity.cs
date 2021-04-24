@@ -5,8 +5,8 @@ using System.Text;
 
 namespace ORM.Contracts
 {
-    internal interface IIdentifiableEntity
+    internal interface IIdentifiableEntity<T>
     {
-        Expression<Func<object, bool>> DbIdentifier { get; }
+        Expression<Func<T, bool>> DbIdentifier { get; }
     }
 }

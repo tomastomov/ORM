@@ -1,4 +1,5 @@
 ﻿using ORM.Contracts;
+using ORM.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,7 +11,7 @@ namespace ORM.Implementation
         public InternalEntity(TEntity entity)
         {
             Entity = entity;
-            Snapshot = (TEntity)this.MemberwiseClone();
+            Snapshot = (TEntity)ObjectCloner.Clone(entity);
         }
 
         public TEntity Entity { get; private set; }

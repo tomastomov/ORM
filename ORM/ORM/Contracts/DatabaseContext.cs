@@ -36,7 +36,7 @@ namespace ORM.Contracts
             stateManager_ = new StateManager(modelDataStorage_);
             database_ = new SqlDatabase(new SqlEntityDeserializer(modelDataStorage_, stateManager_), options_.ConnectionString);
             tableNameProvider_ = new TableNameProvider();
-            changeDetector_ = new ChangeDetector(tableNameProvider_);
+            changeDetector_ = new ChangeDetector(tableNameProvider_, modelDataStorage_);
             updateQueryTranslator_ = new UpdateQueryTranslator(new WhereQueryTranslator());
         }
 
@@ -138,6 +138,8 @@ namespace ORM.Contracts
                 var updatedEntries = changeDetector_.DetectChanges(stateManager_.GetTrackedEntities<object>())
                     .Each(update =>
                         {
+                            var sb = new StringBuilder();
+                            sb.AppendLine($"USE: {options_.DatabaseName}");
                             var command = database_.CreateCommand(builder => builder.WithCommandText(updateQueryTranslator_.Translate(update)));
                             database_.ExecuteCommand(command);
                         });
