@@ -13,12 +13,12 @@ namespace ORMPlayground
 
             context.CreateDatabase();
 
-            var query = context.Entities.Where(p => p.Name == "pesho")
+            var query = context.Entities.Where(p => p.Name == "vanio")
                 .OrderBy(e => e.Age)
                 .ThenByDescending(e => e.Id)
                 .ToList();
 
-            query[0].Name = "vanio";
+            query[0].Name = "pesho";
 
             context.SaveChanges();
             //foreach (var entity in query)

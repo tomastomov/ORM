@@ -20,12 +20,22 @@ namespace ORM.Implementation
         }
         public IEnumerable<IUpdatedEntity> DetectChanges(IEnumerable<ITrackedInternalEntity<object>> entities)
         {
-            //TODO fix comparing of value types
             return entities.Select(e => new UpdatedEntity(tableNameProvider_.GetTableName(e.Entity.GetType()), e.Entity.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                  .Where(t => !typeof(IEnumerable<>).IsAssignableFrom(t.PropertyType))
-                  .Where(p => p.GetValue(e.Entity) != e.Snapshot.GetType().GetProperty(p.Name).GetValue(e.Snapshot))
+                  .Where(t => !t.GetGetMethod().IsVirtual)
+                  .Where(p => !CompareBoxedValues(p.GetValue(e.Entity), e.Snapshot.GetType().GetProperty(p.Name).GetValue(e.Snapshot)))
                   .Select(p => new EntityUpdate(p.Name, p.GetValue(e.Entity))), CreateIdentifier(e.Entity, modelDataStorage_.GetPrimaryKey(e.Entity.GetType()).Property)));
         }
+
+        private bool CompareBoxedValues(object first, object second)
+        {
+            if (first.GetType().IsValueType && second.GetType().IsValueType)
+            {
+                first = Convert.ChangeType(first, first.GetType());
+                second = Convert.ChangeType(second, second.GetType());
+            }
+
+            return first.Equals(second);
+        } 
 
         private LambdaExpression CreateIdentifier<T>(T instance, PropertyInfo property)
         {
